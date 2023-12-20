@@ -1,5 +1,5 @@
 
---Start of Global Scope--------------------------------------------------------- 
+--Start of Global Scope---------------------------------------------------------
 
 -- A point must have this minimum distance to background to become a foreground point
 local THRESHOLD = 150.0
@@ -58,8 +58,8 @@ provider:setDelayMs(100)
 
 --Start of Function and Event Scope---------------------------------------------
 
--- Is called for each new PolarScan
---@handleNewScan(scan:Scan)
+---Is called for each new PolarScan
+---@param scan Scan
 function handleNewScan(scan)
   local startTime = DateTime.getTimestamp()
 
@@ -72,12 +72,12 @@ function handleNewScan(scan)
     if ( scan5 ~= nil ) then
 
       scanCounter = scanCounter + 1
-      
+
       local beamCount = scan5:getBeamCount()
       local echoCount = scan5:getEchoCount()
-      
+
       local foregroundCount = 0
-            
+
       if  scanCounter < BACKGROUND_COUNTER then
         -- save as reference/background scan for view
         backgroundScan = scan5:clone()
@@ -106,16 +106,16 @@ function handleNewScan(scan)
         viewer:addScan(scan5, scanDecorationForeground)
         viewer:present()
       end
-      
+
       local deltaTime = DateTime.getTimestamp() - startTime
       if scanCounter % 15 == 1 then
-        print(string.format("%s: Scan %8d (%d, %d, %d ms): Foreground Points = %4d ", DateTime.getTime(), 
+        print(string.format("%s: Scan %8d (%d, %d, %d ms): Foreground Points = %4d ", DateTime.getTime(),
               scanCounter, beamCount, echoCount, deltaTime, foregroundCount))
       end
     end
   end
 end
--- Register callback function to "OnNewScan" event. 
+-- Register callback function to "OnNewScan" event.
 -- This call also starts the playback of scans
 Scan.Provider.File.register(provider, "OnNewScan", handleNewScan)
 
